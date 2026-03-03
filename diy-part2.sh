@@ -190,45 +190,6 @@ find package/feeds -name "rust" -type l -exec rm -f {} \;
 ./scripts/feeds update -i
 ./scripts/feeds install -a -f
 
-# =========================================================
-# 清理无效的 OPKG 软件源 
-# =========================================================
-echo ">>> [OPKG] 执行源列表净化，仅保留官方核心源..."
-
-# 1. 定义需要保留的官方源 (白名单)
-# core, base, luci, packages, routing, telephony 是官方镜像站真正存在的
-SAFE_FEEDS="core base luci packages routing telephony"
-
-# 2. 物理修改 .config 基因 (最彻底的方法)
-# 逻辑：先把所有 FEED 标记为关闭，然后再把白名单里的重新打开
-echo ">>> 正在屏蔽非标准 Feed 基因..."
-# A. 先把所有的 CONFIG_FEED_xxx 都注释掉
-sed -i 's/^CONFIG_FEED_.*=y$/# & is not set/' .config
-
-# B. 循环把白名单里的源恢复回来
-for feed in $SAFE_FEEDS; do
-    sed -i "s/^# CONFIG_FEED_$feed is not set$/CONFIG_FEED_$feed=y/" .config
-done
-
-# 3. 拦截动态生成脚本 (针对部分源码的特供补丁)
-# 如果源码尝试在编译阶段动态写 distfeeds.conf，我们直接把逻辑行删了
-if [ -f include/feeds.mk ]; then
-    echo ">>> 正在屏蔽 feeds.mk 的自动注入逻辑..."
-    # 这一步是“降维打击”，防止编译系统在最后阶段绕过 .config 强行写入
-    sed -i '/ifeq ($(CONFIG_FEED_.*),y)/,/endif/d' include/feeds.mk
-fi
-
-# 4. 物理还原 feeds.conf.default (让 feeds 脚本也变干净)
-echo ">>> 正在同步还原 feeds.conf.default..."
-for feed in $(grep -E '^src-git' feeds.conf.default | awk '{print $2}'); do
-    # 如果这个源不在白名单里，就从 feeds.conf.default 中删除
-    if [[ ! " $SAFE_FEEDS " =~ " $feed " ]]; then
-        sed -i "/ $feed /d" feeds.conf.default
-    fi
-done
-
-echo "✅ [OPKG] 净化完成。固件出厂后将只保留 6 大核心源。"
-
 # 修改默认 IP (192.168.30.1)
 sed -i 's/192.168.6.1/192.168.30.1/g' package/base-files/files/bin/config_generate
 
