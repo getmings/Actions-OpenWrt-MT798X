@@ -177,6 +177,34 @@ find package/feeds -name "rust" -type l -exec rm -f {} \;
 ./scripts/feeds update -i
 ./scripts/feeds install -a -f
 
+# =========================================================
+# 清理无效的 OPKG 软件源 (彻底解决 opkg update 报错)
+# =========================================================
+echo ">>> 正在清理无效的 OPKG 软件源..."
+
+# 定义我们要保留的“正牌”官方源关键字
+# base, luci, packages, routing, telephony 是官方镜像站真正存在的
+SAFE_FEEDS="base\|luci\|packages\|routing\|telephony"
+
+# 1. 强制只保留官方 5 大源，删除所有 DIY 产生的无效源 (如 passwall, openclash 等)
+# 这一步会修改 /etc/opkg/distfeeds.conf 模板文件
+DISTFEED_FILE="package/base-files/files/etc/opkg/distfeeds.conf"
+
+if [ -f "$DISTFEED_FILE" ]; then
+    # 逻辑：查找不包含 SAFE_FEEDS 关键字的行，并将其删除
+    sed -i "/$SAFE_FEEDS/!d" "$DISTFEED_FILE"
+    echo "✅ 已清理 $DISTFEED_FILE 中的无效源。"
+else
+    # 兼容性方案：有些源码是在编译中动态生成的，我们直接创建一个干净的覆盖它
+    echo "⚠️ 未找到 distfeeds.conf 模板，正在执行动态拦截..."
+    # 在编译过程中强行清空非标准源 (通过修改 include 逻辑)
+    sed -i '/ifeq ($(CONFIG_FEED_.*),y)/,/endif/d' include/feeds.mk
+fi
+
+# 2. (可选) 禁用自定义源的自动生成逻辑
+# 防止编译系统在最后阶段再次把这些源塞进去
+sed -i 's/CONFIG_FEED_.*=y/# &/' .config 2>/dev/null || true
+
 # 修改默认 IP (192.168.30.1)
 sed -i 's/192.168.6.1/192.168.30.1/g' package/base-files/files/bin/config_generate
 
