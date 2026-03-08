@@ -8,7 +8,7 @@
 
 说明：
      
-     24.10闭源WIFI固件（基于immortalwrt）
+     基于immortalwrt的闭源WIFI固件
 
      默认地址：192.168.30.1  密码：无，直接回车。
 
