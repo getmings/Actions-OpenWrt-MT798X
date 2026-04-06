@@ -4,7 +4,7 @@
 
 路由器型号：
 
-     wr30u / JCG Q30 / uax3000e / clx s20l / clx s20p
+     wr30u / JCG Q30 / x60 new / uax3000e / clx s20l / clx s20p
 
 说明：
      
