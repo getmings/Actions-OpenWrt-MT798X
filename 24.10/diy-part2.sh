@@ -117,3 +117,6 @@ fi
 sed -i 's/192.168.6.1/192.168.30.1/g' package/base-files/files/bin/config_generate
 
 echo "✅ SSH2 配置完成。"
+
+# 替换10_system.js
+cp ../24.10/10_system.js feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
