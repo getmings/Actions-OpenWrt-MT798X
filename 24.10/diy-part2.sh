@@ -41,6 +41,9 @@ mv $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}/* $WORKINGDIR/
 rmdir $WORKINGDIR/luci-app-smartdns-${LUCIBRANCH}
 rm $WORKINGDIR/${LUCIBRANCH}.zip
 
+# 替换10_system.js
+cp $GITHUB_WORKSPACE/24.10/10_system.js feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+
 # ---------------------------------------------------------
 # libxcrypt 专项救治 (极致精简版)
 # ---------------------------------------------------------
@@ -117,6 +120,3 @@ fi
 sed -i 's/192.168.6.1/192.168.30.1/g' package/base-files/files/bin/config_generate
 
 echo "✅ SSH2 配置完成。"
-
-# 替换10_system.js
-cp ../24.10/10_system.js feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
