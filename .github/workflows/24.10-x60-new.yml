@@ -146,6 +146,8 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
+        make defconfig
+        cat .config
 
     # 7. SSH 调试 (可选)
     - name: SSH connection to Actions （SSH 调试）
