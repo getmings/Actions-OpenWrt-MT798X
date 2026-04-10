@@ -143,6 +143,7 @@ jobs:
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        ls -ldh $PWD/*
         echo "查看1..."
         cat openwrt/.config
         chmod +x $DIY_P2_SH
@@ -151,6 +152,7 @@ jobs:
         make defconfig
         echo "查看2..."
         cat .config
+        ls -ldh $PWD/*
 
     # 7. SSH 调试 (可选)
     - name: SSH connection to Actions （SSH 调试）
