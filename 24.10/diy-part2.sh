@@ -106,6 +106,16 @@ if [ -n "$OPENLIST2_DIR" ]; then
     echo "✅ OpenList2 菜单已移动到 NAS"
 fi
 
+# 5.4 timecontrol -> services (自动定位并精准修改)
+TIMECONTROL_DIR=$(find feeds package -type d -name "luci-app-timecontrol" | head -n 1)
+if [ -n "$TIMECONTROL_DIR" ]; then
+    # 修改菜单路径：从 services 变更为 nas
+    find "$TIMECONTROL_DIR" -type f -exec sed -i 's|admin/control/timecontrol|admin/services/timecontrol|g' {} +
+    # 修改 JSON 父级定义 (如果存在 parent 字段)
+    find "$TIMECONTROL_DIR" -type f -exec sed -i 's/"parent": "luci.control"/"parent": "luci.services"/g' {} +
+    echo "✅ timecontrol 菜单已移动到 services"
+fi
+
 #修复Rust编译失败
 RUST_FILE=$(find ../feeds/packages/ -maxdepth 3 -type f -wholename "*/rust/Makefile")
 if [ -f "$RUST_FILE" ]; then
