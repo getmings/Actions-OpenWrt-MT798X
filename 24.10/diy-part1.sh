@@ -89,7 +89,7 @@ UPDATE_PACKAGE "vnt" "lmq8267/luci-app-vnt" "main"
 UPDATE_PACKAGE "qmodem" "FUjr/QModem" "main"
 
 UPDATE_PACKAGE "luci-app-adguardhome" "kenzok78/luci-app-adguardhome" "main"   #去广告
-UPDATE_PACKAGE "luci-app-nft-timecontrol" "sirpdboy/luci-app-timecontrol" "main"  #上网时间控制js版
+UPDATE_PACKAGE "luci-app-timecontrol" "sirpdboy/luci-app-timecontrol" "main"  #上网时间控制js版
 UPDATE_PACKAGE "luci-app-wechatpush" "tty228/luci-app-wechatpush" "master"   #微信推送
 
 #更新软件包版本
