@@ -39,6 +39,9 @@ UPDATE_PACKAGE() {
 		mv -f $REPO_NAME $PKG_NAME
 	fi
 }
+# 更新golang
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 
 # 调用示例
 # UPDATE_PACKAGE "OpenAppFilter" "destan19/OpenAppFilter" "master" "" "custom_name1 custom_name2"
@@ -61,6 +64,10 @@ UPDATE_PACKAGE "openclash" "vernesong/OpenClash" "dev" "pkg"
 UPDATE_PACKAGE "passwall" "Openwrt-Passwall/openwrt-passwall" "main" "pkg"
 UPDATE_PACKAGE "passwall2" "Openwrt-Passwall/openwrt-passwall2" "main" "pkg"
 # UPDATE_PACKAGE "passwall-packages" "Openwrt-Passwall/openwrt-passwall-packages" "main" 
+# Daed
+UPDATE_PACKAGE "daed" "QiuSimons/luci-app-daed" "master"
+# 添加 vmlinux-btf 模块
+UPDATE_PACKAGE "vmlinux-btf" "QiuSimons/vmlinux-btf" "master" 
 
 # 常用工具与应用
 UPDATE_PACKAGE "ddns-go" "sirpdboy/luci-app-ddns-go" "main"  #luci-app-ddns-go
